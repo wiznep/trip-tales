@@ -2,16 +2,6 @@
 
 A FastAPI backend for the Trip Tales Pro application, providing RESTful APIs for user management, trip creation, media upload, and AI-powered video generation.
 
-## Features
-
-- 🔐 **User Authentication** - JWT-based authentication system
-- 📸 **Media Upload** - Support for images and videos with file validation
-- 🗺️ **Trip Management** - CRUD operations for travel trips
-- 🤖 **AI Integration** - Video generation from uploaded media and prompts
-- 📊 **Database** - MySQL integration with SQLAlchemy ORM
-- 📚 **API Documentation** - Automatic OpenAPI/Swagger documentation
-- 🚀 **Async Support** - Built with FastAPI for high performance
-
 ## Project Structure
 
 ```
