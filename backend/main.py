@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from typing import List
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.api.v1.api import api_router
@@ -37,6 +38,17 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "service": "trip-tales-api"}
+
+@app.post("/upload/")
+async def upload_files(files: List[UploadFile] = File(...)):
+    saved_files = []
+    for file in files:
+        file_path = f"{settings.UPLOAD_DIR}/{file.filename}"
+        with open(file_path, "wb") as f:
+            f.write(await file.read())
+        saved_files.append(file.filename)
+
+    return {"uploaded": saved_files}
 
 if __name__ == "__main__":
     import uvicorn

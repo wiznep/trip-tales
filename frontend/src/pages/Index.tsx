@@ -19,9 +19,27 @@ const Index = () => {
   const [currentStyle, setCurrentStyle] = useState('');
   const [generatedVideoUrl, setGeneratedVideoUrl] = useState<string>('');
 
-  const handleFilesUpload = (files: UploadedFile[]) => {
+  const handleFilesUpload = async (files: UploadedFile[]) => {
     setUploadedFiles(prev => [...prev, ...files]);
-  };
+  
+    // Prepare form data
+    const formData = new FormData();
+    files.forEach(fileObj => {
+      formData.append("files", fileObj.file);  // 👈 matches FastAPI param
+    });
+  
+    try {
+      const response = await fetch("http://127.0.0.1:8000/upload/", {
+        method: "POST",
+        body: formData,
+      });
+  
+      const data = await response.json();
+      console.log("Uploaded successfully:", data);
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
+  };  
 
   const handleGenerate = async (prompt: string, style: string) => {
     setCurrentPrompt(prompt);
