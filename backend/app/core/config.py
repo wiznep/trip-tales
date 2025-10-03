@@ -32,6 +32,13 @@ class Settings(BaseSettings):
     AI_SERVICE_URL: Optional[str] = None
     AI_SERVICE_API_KEY: Optional[str] = None
     
+    # Video Processing Settings
+    VIDEO_FPS: int = 30  # Frames per second
+    VIDEO_RESOLUTION: tuple = (1920, 1080)  # Full HD
+    VIDEO_CODEC: str = "mp4v"  # or "avc1" for H.264
+    PHOTO_DURATION: int = 1  # Duration per photo in seconds
+    TRANSITION_FRAMES: int = 15  # Frames for fade transitions (0.5s at 30fps)
+    
     class Config:
         env_file = ".env"
 

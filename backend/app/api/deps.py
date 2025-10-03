@@ -11,7 +11,7 @@ from app.core.config import settings
 from app.database import SessionLocal
 
 reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_V1_STR}/login/access-token"
+    tokenUrl=f"{settings.API_V1_STR}/users/login"
 )
 
 def get_db() -> Generator:
@@ -21,23 +21,24 @@ def get_db() -> Generator:
     finally:
         db.close()
 
+
 def get_current_user(
-    db: Session = Depends(get_db), token: str = Depends(reusable_oauth2)
+    db: Session = Depends(get_db),
 ) -> models.User:
-    try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
-        )
-        token_data = schemas.TokenPayload(**payload)
-    except (jwt.JWTError, ValidationError):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Could not validate credentials",
-        )
-    user = crud.user.get(db, id=token_data.sub)
+    """
+    Bypasses authentication for development.
+    Retrieves the first user from the database.
+    """
+    user = crud.user.get(db, id=1)
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        # This is a fallback in case you don't have any users in your DB yet.
+        # It creates a default user.
+        user_in = schemas.UserCreate(
+            email="test@example.com", password="password"
+        )
+        user = crud.user.create(db, obj_in=user_in)
     return user
+
 
 def get_current_active_user(
     current_user: models.User = Depends(get_current_user),

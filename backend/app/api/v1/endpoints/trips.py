@@ -11,7 +11,7 @@ def read_trips(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
-    # current_user: models.User = Depends(deps.get_current_active_user),
+    current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """Retrieve trips for current user."""
     trips = crud.trip.get_by_owner(db=db, owner_id=current_user.id, skip=skip, limit=limit)
